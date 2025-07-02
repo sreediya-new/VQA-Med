@@ -15,17 +15,20 @@ class Utility(object):
 
     @staticmethod
     def read_dataset(dataset):
-        path="dataset/VQAMed2018"+dataset+"/VQAMed2018"+dataset+"-QA.csv"
-        df =pd.read_csv(path, sep='\t', header=None, quoting=csv.QUOTE_NONE)
+        path="/content/dataset/VQAMed2019"+dataset+"/VQAMed2019"+dataset+"-QA.csv"
+        #df =pd.read_csv(path, sep='|', header=None, quoting=csv.QUOTE_NONE)
+        df =pd.read_csv(path)
         if "Test" in dataset:
-            df = df.rename(columns={0: 'id', 1: 'image_name', 2:"question"})
+           df = df.rename(columns={'0': 'id', '1': 'image_name', '2': 'question', })
         else:
-            df = df.rename(columns={0: 'id', 1: 'image_name', 2:"question", 3:"answer"})
-        print(dataset+" data size=",len(df))
-        images = []
-        for i in df["image_name"]:
+           df = df.rename(columns={'0': 'id', '1': 'image_name', '2': 'question','3': 'answer'})
 
-            fname = "dataset/VQAMed2018"+dataset+"/VQAMed2018"+dataset+"-images/"+i+".jpg"
+        print(dataset+" data size=",len(df))
+        print("Current columns:", df.columns.tolist())
+        images = []
+        for i in df["id"]:
+
+            fname = "/content/dataset/VQAMed2019"+dataset+"/VQAMed2019"+dataset+"-images/"+i+".jpg"
             images.append(fname)
         if "Test" in dataset:
             return images, df["question"]
@@ -33,11 +36,11 @@ class Utility(object):
             return images, df["question"], df["answer"]
 
 
-    @staticmethod
+    @staticmethod  
     def show_image(id, images, questions, answers):
         fname = images[id]
         img=mpimg.imread(fname, format="jpg")
-        print ("Image name :", fname)
+        print ("Image name :", fname)  
         print ("Question   :", questions[id])
         print ("Answer     :", answers[id] )
         plt.imshow(img)
